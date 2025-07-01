@@ -11,7 +11,6 @@ if not os.path.exists(settings.VECTOR_STORE_DIR):
     os.mkdir(settings.VECTOR_STORE_DIR)
 
 
-
 class ChromaUtils:
     def __init__(self, collection_name="fast_api_collection"):
         self.collection_name = collection_name
@@ -33,6 +32,13 @@ class ChromaUtils:
             for split in splits:
                 split.metadata = {**split.metadata, **metadata}
         return vector_db.add_documents(splits)
+
+    def add_documents(self, documents, metadata=None):
+        vector_db = self._vector_db()
+        if metadata:
+            for document in documents:
+                document.metadata = {**document.metadata, **metadata}
+        return vector_db.add_documents(documents)
 
     def delete_collection(self):
         self._vector_db().delete_collection()

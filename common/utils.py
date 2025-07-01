@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from langchain_community.document_loaders import WebBaseLoader
 from dotenv import load_dotenv
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 import json
 from common.models import ApiItem, ApiProject
 from pathlib import Path
@@ -62,7 +63,12 @@ def parse_openapi_json(fast_openapi_json_url: str) -> ApiProject:
     return ApiProject(base_url=base_url, apis=api_item_list, project_name=project_name)
 
 
-def create_txt_document(api_project: ApiProject):
+def create_txt_document(api_str, project_name):
+    with open(f"{project.project_name}.txt", 'w', encoding='utf-8') as f:
+        f.write(api_str)
+
+
+def create_text_from_api(api_project: ApiProject):
     apis = project.apis
     api_str = ""
     for api in apis:
@@ -76,9 +82,7 @@ def create_txt_document(api_project: ApiProject):
         api_str += f"\n【请求示例】\n{json.dumps(api.request_body, indent=4, ensure_ascii=False) if api.request_body else json.dumps({})}\n"
         api_str += "\n"
         api_str += "------------分割线--------------------\n"
-    with open(f"{project.project_name}.txt", 'w', encoding='utf-8') as f:
-        f.write(api_str)
-
+    return api_str
 
 
 def request_api(url, method, params=None, request_body=None, content_type="application/json"):
@@ -96,6 +100,22 @@ def request_api(url, method, params=None, request_body=None, content_type="appli
     finally:
         return resonpse
 
+
+def is_json_with_single_quotes(s):
+    try:
+        # 替换单引号为双引号
+        s = s.replace("'", '"')
+        return isinstance(json.loads(s), (dict, list))
+    except (json.JSONDecodeError, TypeError):
+        return False
+
+
+def splitter_text(url):
+    api_project = parse_openapi_json(url)
+    api_str = create_text_from_api(api_project)
+    splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    splits = splitter.split_text(api_str)
+    return splits
 
 # input_str = "{'types': 1,'location': '-100,-112','pagesize': 20,'pagenum': 0}"
 # result = extract_json_from_string(input_str)
@@ -116,14 +136,6 @@ def request_api(url, method, params=None, request_body=None, content_type="appli
 #     user_input = input("请输入：")
 #     res=extract_json_from_string(user_input)
 #     print(res)
-
-def is_json_with_single_quotes(s):
-    try:
-        # 替换单引号为双引号
-        s = s.replace("'", '"')
-        return isinstance(json.loads(s), (dict, list))
-    except (json.JSONDecodeError, TypeError):
-        return False
 
 
 # s = input('请输入：')
