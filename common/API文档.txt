@@ -1,0 +1,117 @@
+【接口名称】
+ api-queryService
+
+【接口功能】
+ api-queryService
+
+【请求方式】
+ POST
+
+ 【content-type】
+ application/json
+【请求地址】
+ http://localhost:8080//api/queryService/
+
+【接口摘要】
+Query Around Service
+
+【接口描述】
+查询周边服务
+:param request:
+:param user_data: 必填
+:return:
+
+【请求示例】
+{
+    "types": "",
+    "location": "",
+    "pagesize": 20,
+    "pagenum": 0
+}
+
+------------分割线--------------------
+【接口名称】
+ api-users
+
+【接口功能】
+ api-users
+
+【请求方式】
+ POST
+
+ 【content-type】
+ application/json
+【请求地址】
+ http://localhost:8080//api/users/
+
+【接口摘要】
+Create User
+
+【接口描述】
+创建用户
+:param user_data: 必填
+:param db:
+:return: 返回用户IDCreate a new user
+
+【请求示例】
+{
+    "user_id": "1",
+    "lng": "",
+    "lat": ""
+}
+
+------------分割线--------------------
+【接口名称】
+ api-users
+
+【接口功能】
+ api-users
+
+【请求方式】
+ GET
+
+ 【content-type】
+ 
+【请求地址】
+ http://localhost:8080//api/users/{user_id}
+
+【接口摘要】
+Get User By User Id
+
+【接口描述】
+"
+根据用户ID获取用户信息
+:param db: 数据库连接
+
+【请求示例】
+{}
+
+------------分割线--------------------
+【接口名称】
+ api-getId
+
+【接口功能】
+ api-getId
+
+【请求方式】
+ POST
+
+ 【content-type】
+ application/json
+【请求地址】
+ http://localhost:8080//api/getId/
+
+【接口摘要】
+Get
+
+【接口描述】
+获取ID
+:param user_data: 必填
+:return:
+
+【请求示例】
+{
+    "js_code": ""
+}
+
+------------分割线--------------------
